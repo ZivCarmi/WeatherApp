@@ -1,6 +1,5 @@
 ## WeatherApp
-A simple weather application.<br />
-Application built with [AccuWeather API](https://developer.accuweather.com/)
+A simple weather application built with [AccuWeather API](https://developer.accuweather.com/)
 
 ## Getting Started
 
