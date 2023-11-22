@@ -24,9 +24,7 @@ export const getSuggestions = (cityQuery: string): AppThunk => {
     try {
       dispatch(setIsFetchingSuggestions(true));
 
-      const response = await fetch(
-        `http://localhost:3000/api/weather/location?query=${cityQuery}`
-      );
+      const response = await fetch(`/api/weather/location?query=${cityQuery}`);
       const responseJson: CityAPI[] = await response.json();
 
       const suggestions: City[] = responseJson.map((city: CityAPI) => ({
@@ -49,9 +47,7 @@ export const getLocation = (cityQuery: string): AppThunk => {
     try {
       dispatch(setIsFetchingLocation(true));
 
-      const response = await fetch(
-        `http://localhost:3000/api/weather/location?query=${cityQuery}`
-      );
+      const response = await fetch(`/api/weather/location?query=${cityQuery}`);
       const responseJson: CityAPI[] = await response.json();
 
       const location: City = {
@@ -75,7 +71,7 @@ export const getGeoposition = (lat: number, long: number): AppThunk => {
       dispatch(setIsFetchingLocation(true));
 
       const response = await fetch(
-        `http://localhost:3000/api/weather/geoposition?lat=${lat}&long=${long}`
+        `/api/weather/geoposition?lat=${lat}&long=${long}`
       );
       const responseJson = await response.json();
 

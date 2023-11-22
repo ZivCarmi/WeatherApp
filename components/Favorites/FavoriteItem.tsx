@@ -64,7 +64,7 @@ const FavoriteItem: React.FC<Favorite> = ({ cityKey, cityName }) => {
             className="text-left text-2xl"
           />
         )}
-        {conditionsIsError && <p>Could not fetch condtions</p>}
+        {conditionsIsError && <p>Could not fetch conditions</p>}
       </button>
     </li>
   );

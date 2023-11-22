@@ -47,7 +47,7 @@ const LocationItem = () => {
               />
             </div>
           )}
-          {conditionsIsError && <p>Could not fetch condtions</p>}
+          {conditionsIsError && <p>Could not fetch conditions</p>}
           <div>
             <h2 className="text-2xl lg:text-5xl lg:mb-3 text-foreground">
               {location?.city}, <span>{location?.country}</span>
