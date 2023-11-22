@@ -22,7 +22,7 @@ export default async function handler(
 
     return res.status(200).json(data);
   } catch (e) {
-    console.error("An error has occurred in weather/location route", e);
-    return;
+    console.error("An error has occurred in weather/conditions route", e);
+    return res.status(401);
   }
 }

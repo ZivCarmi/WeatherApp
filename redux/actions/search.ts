@@ -6,8 +6,18 @@ import {
   setIsFetchingLocation,
   setLocation,
   setSuggestions,
+  setCityQuery,
 } from "../slices/search-slice";
 import { AppThunk } from "../store";
+
+export const fetchDefaultCity = (cityQuery: string): AppThunk => {
+  return async (dispatch, getState) => {
+    if (getState().search.location || !cityQuery) return;
+
+    dispatch(setCityQuery(cityQuery));
+    dispatch(getLocation(cityQuery));
+  };
+};
 
 export const getSuggestions = (cityQuery: string): AppThunk => {
   return async (dispatch) => {
@@ -53,6 +63,31 @@ export const getLocation = (cityQuery: string): AppThunk => {
       dispatch(setLocation(location));
     } catch (error) {
       dispatch(setErrorLocation("Could not get city location"));
+    } finally {
+      dispatch(setIsFetchingLocation(false));
+    }
+  };
+};
+
+export const getGeoposition = (lat: number, long: number): AppThunk => {
+  return async (dispatch) => {
+    try {
+      dispatch(setIsFetchingLocation(true));
+
+      const response = await fetch(
+        `http://localhost:3000/api/weather/geoposition?lat=${lat}&long=${long}`
+      );
+      const responseJson = await response.json();
+
+      const location: City = {
+        city: responseJson.LocalizedName,
+        key: responseJson.Key,
+        country: responseJson.Country.LocalizedName,
+      };
+
+      dispatch(setLocation(location));
+    } catch (error) {
+      dispatch(setErrorLocation("Could not fetch cities suggestions"));
     } finally {
       dispatch(setIsFetchingLocation(false));
     }

@@ -13,7 +13,7 @@ export interface SearchState {
 }
 
 const initialState: SearchState = {
-  query: "Tel Aviv",
+  query: "",
   location: null,
   showDropdown: false,
   suggestions: [],

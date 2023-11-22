@@ -5,7 +5,11 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { resetSuggestions, setCityQuery } from "@/redux/slices/search-slice";
 import Loader from "@/components/Theme/Loader";
 import Autocomplete from "@/components/ui/autocomplete";
-import { getLocation, getSuggestions } from "@/redux/actions/search";
+import {
+  fetchDefaultCity,
+  getGeoposition,
+  getSuggestions,
+} from "@/redux/actions/search";
 import LocationItem from "@/components/Locations/LocationItem";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -35,14 +39,17 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const fetchDefaultCity = async () => {
-      if (location) return;
-
-      dispatch(setCityQuery(cityQuery));
-      dispatch(getLocation(cityQuery));
-    };
-
-    fetchDefaultCity();
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        dispatch(
+          getGeoposition(position.coords.latitude, position.coords.longitude)
+        );
+      },
+      function (error) {
+        if (error.code == error.PERMISSION_DENIED)
+          dispatch(fetchDefaultCity("Tel Aviv"));
+      }
+    );
   }, []);
 
   useEffect(() => {

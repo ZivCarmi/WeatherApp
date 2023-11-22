@@ -2,9 +2,8 @@ import { ReactNode } from "react";
 import Navbar from "./Header";
 import { Inter as FontSans } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
-
-import { cn } from "@/lib/utils";
 import Container from "../Theme/Container";
+import { cn } from "@/lib/utils";
 
 export const fontSans = FontSans({
   subsets: ["latin"],
