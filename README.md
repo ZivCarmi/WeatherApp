@@ -1,6 +1,6 @@
 ## WeatherApp
 A simple weather application.
-Application built with [AccuWeather API]https://developer.accuweather.com/
+Application built with [AccuWeather API](https://developer.accuweather.com/)
 
 ## Getting Started
 
@@ -15,4 +15,4 @@ npm run dev
 Application built with:
 - Next.js
 - Tailwind
-- [shadcnui]https://ui.shadcn.com/
+- [shadcnui](https://ui.shadcn.com)
