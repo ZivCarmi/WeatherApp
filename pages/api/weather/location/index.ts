@@ -13,21 +13,15 @@ export default async function handler(
       return res.status(405);
     }
 
-    const { query, key } = req.query;
+    const { query } = req.query;
 
     if (!query) {
       return res.status(400);
     }
 
-    let endpoint = "http://dataservice.accuweather.com";
-
-    if (key) {
-      endpoint += `/locations/v1/${key}?apikey=${process.env.API_KEY}`;
-    } else {
-      endpoint += `/locations/v1/cities/autocomplete?apikey=${process.env.API_KEY}&q=${query}`;
-    }
-
-    const response = await fetch(endpoint);
+    const response = await fetch(
+      `http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${process.env.NEXT_PUBLIC_API_KEY}&q=${query}`
+    );
     const data = await response.json();
 
     return res.status(200).json(data);
