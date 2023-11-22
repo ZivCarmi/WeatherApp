@@ -11,10 +11,17 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import Container from "../Theme/Container";
+import { useRouter } from "next/router";
+
+const links = [
+  { href: "/", text: "Home" },
+  { href: "/favorites", text: "Favorites" },
+];
 
 const Header = () => {
   const { isMetric, tempSign } = useTempMode();
   const dispatch = useAppDispatch();
+  const { pathname } = useRouter();
 
   return (
     <header className="p-4 border-b">
@@ -24,12 +31,18 @@ const Header = () => {
         </h1>
         <nav>
           <ul className="flex gap-4 text-foreground">
-            <li>
-              <Link href="/">Home</Link>
-            </li>
-            <li>
-              <Link href="/favorites">Favorites</Link>
-            </li>
+            {links.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className={`transition-colors hover:text-foreground/80 text-foreground${
+                    pathname === link.href ? "" : "/60"
+                  }`}
+                >
+                  {link.text}
+                </Link>
+              </li>
+            ))}
           </ul>
         </nav>
 

@@ -1,5 +1,6 @@
 import FavoriteItem from "@/components/Favorites/FavoriteItem";
 import { useAppSelector } from "@/redux/hooks";
+import { AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 
 const Favorites = () => {
@@ -7,13 +8,15 @@ const Favorites = () => {
 
   return (
     <ul className="grid md:grid-cols-3 gap-6">
-      {favorites?.map((fav) => (
-        <FavoriteItem
-          key={fav.cityKey}
-          cityKey={fav.cityKey}
-          cityName={fav.cityName}
-        />
-      ))}
+      <AnimatePresence>
+        {favorites?.map((fav) => (
+          <FavoriteItem
+            key={fav.cityKey}
+            cityKey={fav.cityKey}
+            cityName={fav.cityName}
+          />
+        ))}
+      </AnimatePresence>
     </ul>
   );
 };

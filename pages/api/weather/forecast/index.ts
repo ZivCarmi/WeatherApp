@@ -16,7 +16,7 @@ export default async function handler(
     const { key, isMetric } = req.query;
 
     const response = await fetch(
-      `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${key}?apikey=${process.env.NEXT_PUBLIC_API_KEY}&metric=${isMetric}`
+      `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${key}?apikey=${process.env.API_KEY}&metric=${isMetric}`
     );
     const data = await response.json();
 

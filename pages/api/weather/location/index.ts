@@ -20,7 +20,7 @@ export default async function handler(
     }
 
     const response = await fetch(
-      `http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${process.env.NEXT_PUBLIC_API_KEY}&q=${query}`
+      `http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${process.env.API_KEY}&q=${query}`
     );
     const data = await response.json();
 

@@ -13,6 +13,7 @@ import {
 import LocationItem from "@/components/Locations/LocationItem";
 import { useToast } from "@/components/ui/use-toast";
 import { IoClose } from "react-icons/io5";
+import { motion } from "framer-motion";
 
 const Home = () => {
   const cityQuery = useAppSelector((state) => state.search.query);
@@ -50,6 +51,8 @@ const Home = () => {
   };
 
   useEffect(() => {
+    if (cityQuery) return;
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         dispatch(

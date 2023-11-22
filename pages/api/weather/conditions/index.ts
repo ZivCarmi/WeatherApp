@@ -16,7 +16,7 @@ export default async function handler(
     const { key } = req.query;
 
     const response = await fetch(
-      `http://dataservice.accuweather.com/currentconditions/v1/${key}?apikey=${process.env.NEXT_PUBLIC_API_KEY}`
+      `http://dataservice.accuweather.com/currentconditions/v1/${key}?apikey=${process.env.API_KEY}`
     );
     const data = await response.json();
 

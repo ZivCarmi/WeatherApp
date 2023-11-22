@@ -7,6 +7,7 @@ import useTempMode from "@/hooks/useTempMode";
 import Loader from "../Theme/Loader";
 import { useAppSelector } from "@/redux/hooks";
 import TempIcon from "./TempIcon";
+import { motion } from "framer-motion";
 
 const LocationItem = () => {
   const { location } = useAppSelector((state) => state.search);
@@ -29,42 +30,81 @@ const LocationItem = () => {
       <div className="text-3xl flex-1 flex flex-col relative lg:justify-between px-4">
         <div className="flex justify-between">
           {conditionsSuccess && (
-            <TempIcon
-              icon={cityConditions[0]?.WeatherIcon}
-              className="text-[80px] lg:text-[130px]"
-            />
+            <motion.div
+              initial={{ opacity: 0, y: 35 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+              <TempIcon
+                icon={cityConditions[0]?.WeatherIcon}
+                className="text-[80px] lg:text-[130px]"
+              />
+            </motion.div>
           )}
           <div className="mr-2 py-4 absolute right-0">
-            {conditionsSuccess && <LocationFavorite />}
+            {conditionsSuccess && (
+              <motion.div
+                initial={{ opacity: 0, x: -15 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: 0.35 }}
+              >
+                <LocationFavorite />
+              </motion.div>
+            )}
           </div>
         </div>
         <div>
           {conditionsLoading && <Loader />}
           {conditionsSuccess && (
-            <div className="flex text-5xl mb-2 lg:mb-6 gap-10 text-center lg:text-8xl lg:text-left">
+            <motion.div
+              className="flex text-5xl mb-2 lg:mb-6 gap-10 text-center lg:text-8xl lg:text-left"
+              initial={{ opacity: 0, y: 35 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: 0.35 }}
+            >
               <LocationItemTemp
                 value={cityConditions[0]?.Temperature?.[tempName]?.Value}
               />
-            </div>
+            </motion.div>
           )}
           {conditionsIsError && <p>Could not fetch conditions</p>}
           <div>
-            <h2 className="text-2xl lg:text-5xl lg:mb-3 text-foreground">
+            <motion.h2
+              className="text-2xl lg:text-5xl lg:mb-3 text-foreground"
+              initial={{ opacity: 0, y: 35 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: 0.45 }}
+            >
               {location?.city}, <span>{location?.country}</span>
-            </h2>
-            <div className="text-base lg:text-lg">
+            </motion.h2>
+            <motion.div
+              className="text-base lg:text-lg"
+              initial={{ opacity: 0, y: 35 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: 0.55 }}
+            >
               {new Date().toLocaleDateString("en-US", {
                 dateStyle: "long",
               })}
-            </div>
+            </motion.div>
           </div>
           {conditionsLoading && <Loader />}
         </div>
       </div>
 
-      <div className="flex-1 border px-8 py-10 rounded-2xl">
+      <motion.div
+        className="flex-1 border px-8 py-10 rounded-2xl"
+        initial={{ opacity: 0, x: 40 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
         <h2 className="text-xl border-b pb-5 mb-5">5-Day Forecast</h2>
         {forecastLoading && <Loader className="mt-5" />}
+        {cityForecast?.Code === "ServiceUnavailable" && (
+          <div>
+            Service Unavailable<p>{cityForecast?.Message}</p>
+          </div>
+        )}
         {forecastSuccess && (
           <ul className="grid gap-8">
             {cityForecast?.DailyForecasts?.map(
@@ -74,7 +114,7 @@ const LocationItem = () => {
                   className="flex flex-col sm:flex-row items-center justify-between gap-4"
                 >
                   <div className="flex items-center gap-4 w-full">
-                    <div className="text-2xl">
+                    <div className="text-2xl sm:min-w-[65px]">
                       {idx === 0
                         ? "Today"
                         : getDayName(new Date(dayForecast.Date))}
@@ -105,7 +145,7 @@ const LocationItem = () => {
         {forecastIsError && (
           <p className="text-center">Forecast data unavailable</p>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

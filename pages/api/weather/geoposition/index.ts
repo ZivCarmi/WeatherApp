@@ -16,7 +16,7 @@ export default async function handler(
     const { lat, long } = req.query;
 
     const response = await fetch(
-      `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${process.env.NEXT_PUBLIC_API_KEY}&q=${lat},${long}`
+      `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${process.env.API_KEY}&q=${lat},${long}`
     );
     const data = await response.json();
 

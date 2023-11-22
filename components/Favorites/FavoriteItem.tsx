@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { setCityQuery } from "@/redux/slices/search-slice";
 import { getLocation } from "@/redux/actions/search";
 import TempIcon from "../Locations/TempIcon";
+import { motion } from "framer-motion";
 
 const FavoriteItem: React.FC<Favorite> = ({ cityKey, cityName }) => {
   const router = useRouter();
@@ -39,7 +40,12 @@ const FavoriteItem: React.FC<Favorite> = ({ cityKey, cityName }) => {
   };
 
   return (
-    <li className="border rounded-2xl relative">
+    <motion.li
+      className="border rounded-2xl relative"
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ ease: "easeOut" }}
+    >
       <button
         className="text-3xl absolute right-4 top-4 text-destructive"
         onClick={unfavoriteHandler}
@@ -66,7 +72,7 @@ const FavoriteItem: React.FC<Favorite> = ({ cityKey, cityName }) => {
         )}
         {conditionsIsError && <p>Could not fetch conditions</p>}
       </button>
-    </li>
+    </motion.li>
   );
 };
 
