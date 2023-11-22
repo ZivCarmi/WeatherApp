@@ -1,123 +1,88 @@
-import { FormEvent, useState, useEffect } from "react";
+import { useEffect } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { Input } from "@/components/ui/input";
-import { useLazyGetCityQuery } from "@/redux/api";
-import { City } from "@/types/city";
-import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setCityQuery, setCityResults } from "@/redux/slices/search-slice";
-import LocationList from "@/components/Locations/LocationList";
+import { resetSuggestions, setCityQuery } from "@/redux/slices/search-slice";
 import Loader from "@/components/Theme/Loader";
-import { useRouter } from "next/router";
 import Autocomplete from "@/components/ui/autocomplete";
+import { getLocation, getSuggestions } from "@/redux/actions/search";
+import LocationItem from "@/components/Locations/LocationItem";
+import { useToast } from "@/components/ui/use-toast";
 
 const Home = () => {
-  const router = useRouter();
   const cityQuery = useAppSelector((state) => state.search.query);
-  const cachedCities = useAppSelector((state) => state.search.results);
-  const [query, setQuery] = useState(cityQuery);
+  const {
+    suggestions,
+    location,
+    isFetchingSuggestions,
+    isFetchingLocation,
+    errorLocation,
+    errorSuggestions,
+  } = useAppSelector((state) => state.search);
   const dispatch = useAppDispatch();
-  const [getCities, citiesResult] = useLazyGetCityQuery();
-  let citiesToDisplay: City[] = [];
-  const isLoading = citiesResult.isLoading || citiesResult.isFetching;
-  const serviceUnavailable = citiesResult.data?.Code === "ServiceUnavailable";
+  const { toast } = useToast();
 
-  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const changeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
 
-    dispatch(setCityQuery(query));
+    dispatch(setCityQuery(value));
 
-    const citiesData = await getCities({ query }).unwrap();
+    if (value === "") {
+      return dispatch(resetSuggestions());
+    }
 
-    dispatch(setCityResults(citiesData));
+    dispatch(getSuggestions(value));
   };
 
   useEffect(() => {
-    const fetchCityByKey = async () => {
-      if (!router.query?.cityKey) return;
-
-      const citiesData = await getCities({
-        key: router.query?.cityKey,
-      }).unwrap();
-
-      console.log(citiesData);
-
-      const city: City = {
-        Country: {
-          LocalizedName: citiesData?.Country?.LocalizedName,
-        },
-        Key: router.query?.cityKey + "",
-        LocalizedName: query,
-      };
-
-      dispatch(setCityResults([city]));
-    };
-
     const fetchDefaultCity = async () => {
-      if (cachedCities?.length !== 0) return;
+      if (location) return;
 
-      const citiesData = await getCities({ query }).unwrap();
-
-      dispatch(setCityResults(citiesData));
+      dispatch(setCityQuery(cityQuery));
+      dispatch(getLocation(cityQuery));
     };
 
-    if (router.query?.cityKey) {
-      fetchCityByKey();
-    } else {
-      fetchDefaultCity();
-    }
+    fetchDefaultCity();
   }, []);
 
-  if (cachedCities.length > 0) {
-    citiesToDisplay = cachedCities;
-  } else if (citiesResult.data?.length > 0) {
-    citiesToDisplay = citiesResult.data;
-  }
+  useEffect(() => {
+    if (errorLocation) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: errorLocation,
+        duration: 5000,
+      });
+    }
+
+    if (errorSuggestions) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: errorSuggestions,
+        duration: 5000,
+      });
+    }
+  }, [errorLocation, errorSuggestions]);
 
   return (
     <>
-      <div className="flex justify-center items-center flex-col gap-4 h-60">
-        <form
-          className="flex items-center border rounded pl-3 w-96"
-          onSubmit={submitHandler}
-        >
-          <span className="text-sm">
+      <div className="flex justify-center items-center flex-col gap-4 mb-4 sm:h-56">
+        <Autocomplete options={suggestions}>
+          <span className="text-sm pl-3">
             <FaMagnifyingGlass />
           </span>
           <Input
             className="border-none focus-visible:ring-transparent focus-visible:ring-offset-0"
-            onChange={(e) => setQuery(e.target.value)}
-            value={query}
+            onChange={changeHandler}
+            value={cityQuery}
             placeholder="Search by city name"
           />
-          <Autocomplete />
-          <Button variant="secondary">Search</Button>
-        </form>
+          {isFetchingSuggestions && <Loader size={22} className="pr-3" />}
+        </Autocomplete>
       </div>
-      <div>
-        {isLoading && <Loader />}
-        {!citiesResult.isLoading && !citiesResult.isFetching && (
-          <>
-            {citiesToDisplay.length > 0 ? (
-              <LocationList results={citiesToDisplay} />
-            ) : serviceUnavailable ? (
-              <div className="text-center">
-                <h2 className="text-3xl">Service Unavailable</h2>
-                <p className="text-lg mt-2">{citiesResult.data?.Message}</p>
-              </div>
-            ) : (
-              citiesResult.isSuccess && (
-                <div className="text-center">
-                  <h2 className="text-3xl">Nothing found :(</h2>
-                  <p className="text-lg mt-2">
-                    Make sure you spell the city name correctly
-                  </p>
-                </div>
-              )
-            )}
-          </>
-        )}
-      </div>
+      {isFetchingLocation && <Loader />}
+      {!isFetchingLocation && location && <LocationItem key={location.key} />}
     </>
   );
 };

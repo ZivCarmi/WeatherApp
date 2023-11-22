@@ -6,10 +6,6 @@ export const api = createApi({
     baseUrl: "http://localhost:3000/api/weather",
   }),
   endpoints: (builder) => ({
-    getCity: builder.query({
-      query: ({ query, key }) =>
-        `/location?query=${query}${key ? `&key=${key}` : ""}`,
-    }),
     getCityCondition: builder.query({
       query: (key) => `/conditions?key=${key}`,
     }),
@@ -19,8 +15,4 @@ export const api = createApi({
   }),
 });
 
-export const {
-  useLazyGetCityQuery,
-  useGetCityConditionQuery,
-  useGetCityForecastQuery,
-} = api;
+export const { useGetCityConditionQuery, useGetCityForecastQuery } = api;

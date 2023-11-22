@@ -1,19 +1,24 @@
-import { useAppSelector } from "@/redux/hooks";
+import useTempMode from "@/hooks/useTempMode";
+import { cn } from "@/lib/utils";
 
-const LocationItemTemp: React.FC<{ value: number; showMode?: boolean }> = ({
+type LocationItemTempProps = {
+  value: number;
+  className?: string;
+};
+
+const LocationItemTemp: React.FC<LocationItemTempProps> = ({
   value,
-  showMode = true,
+  className,
 }) => {
-  const { metric } = useAppSelector((state) => state.ui);
-  const mode = showMode ? (metric ? "C" : "F") : null;
+  const { tempSign } = useTempMode();
 
   if (!value) {
-    return <p>Could not get temprature</p>;
+    return <p className={cn("", className)}>Unavailable</p>;
   }
 
   return (
-    <div>
-      {Math.round(value)}°<span>{mode}</span>
+    <div className={cn("font-semibold", className)}>
+      {Math.round(value)}°<span>{tempSign}</span>
     </div>
   );
 };

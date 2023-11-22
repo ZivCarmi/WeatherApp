@@ -6,38 +6,33 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Favorite } from "@/types/favorite";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 
-type LocationFavorite = {
-  cityName: string;
-  cityKey: string;
-};
-
-const LocationFavorite: React.FC<LocationFavorite> = ({
-  cityKey,
-  cityName,
-}) => {
+const LocationFavorite = () => {
+  const { location } = useAppSelector((state) => state.search);
   const { favorites } = useAppSelector((state) => state.favorites);
-  const isFavorite = favorites.find((fav: Favorite) => fav.cityKey === cityKey);
+  const isFavorite = favorites.find(
+    (fav: Favorite) => fav.cityKey === location?.key
+  );
   const dispatch = useAppDispatch();
 
   const favoriteHandler = () => {
+    if (!location) return null;
+
     const cityObject: Favorite = {
-      cityKey,
-      cityName,
+      cityKey: location.key,
+      cityName: location.city,
     };
 
     if (favorites.length === 0 || !isFavorite) {
       dispatch(addToFavoriteThunk(cityObject));
     } else {
-      dispatch(removeFromFavoriteThunk(cityKey));
+      dispatch(removeFromFavoriteThunk(location.key));
     }
   };
 
   return (
-    <div>
-      <button className="text-3xl" onClick={favoriteHandler}>
-        {isFavorite ? <FaHeart /> : <FaRegHeart />}
-      </button>
-    </div>
+    <button className="text-3xl" onClick={favoriteHandler}>
+      {isFavorite ? <FaHeart /> : <FaRegHeart />}
+    </button>
   );
 };
 

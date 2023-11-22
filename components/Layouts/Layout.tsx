@@ -1,8 +1,10 @@
 import { ReactNode } from "react";
 import Navbar from "./Header";
 import { Inter as FontSans } from "next/font/google";
+import { Toaster } from "@/components/ui/toaster";
 
 import { cn } from "@/lib/utils";
+import Container from "../Theme/Container";
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -18,7 +20,10 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
       )}
     >
       <Navbar />
-      <main className="p-4">{children}</main>
+      <main className="p-4">
+        <Container>{children}</Container>
+      </main>
+      <Toaster />
     </div>
   );
 };

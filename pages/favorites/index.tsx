@@ -6,7 +6,7 @@ const Favorites = () => {
   const { favorites } = useAppSelector((state) => state.favorites);
 
   return (
-    <ul className="grid grid-cols-4 gap-6">
+    <ul className="grid md:grid-cols-3 gap-6">
       {favorites?.map((fav) => (
         <FavoriteItem
           key={fav.cityKey}
