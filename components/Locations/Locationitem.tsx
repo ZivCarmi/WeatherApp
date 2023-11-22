@@ -10,7 +10,7 @@ import TempIcon from "./TempIcon";
 
 const LocationItem = () => {
   const { location } = useAppSelector((state) => state.search);
-  const { isMetric, tempName, tempSign } = useTempMode();
+  const { isMetric, tempName } = useTempMode();
   const {
     data: cityConditions,
     isSuccess: conditionsSuccess,
