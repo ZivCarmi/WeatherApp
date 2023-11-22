@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { Input } from "@/components/ui/input";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -12,6 +12,7 @@ import {
 } from "@/redux/actions/search";
 import LocationItem from "@/components/Locations/LocationItem";
 import { useToast } from "@/components/ui/use-toast";
+import { IoClose } from "react-icons/io5";
 
 const Home = () => {
   const cityQuery = useAppSelector((state) => state.search.query);
@@ -25,6 +26,7 @@ const Home = () => {
   } = useAppSelector((state) => state.search);
   const dispatch = useAppDispatch();
   const { toast } = useToast();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const changeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -36,6 +38,15 @@ const Home = () => {
     }
 
     dispatch(getSuggestions(value));
+  };
+
+  const resetQueryAndSuggestions = () => {
+    dispatch(setCityQuery(""));
+    dispatch(resetSuggestions());
+
+    if (inputRef.current !== null) {
+      inputRef.current.focus();
+    }
   };
 
   useEffect(() => {
@@ -84,7 +95,16 @@ const Home = () => {
             onChange={changeHandler}
             value={cityQuery}
             placeholder="Search by city name"
+            ref={inputRef}
           />
+          {cityQuery && !isFetchingSuggestions && (
+            <button
+              className="flex items-center justify-center text-xl pr-2"
+              onClick={resetQueryAndSuggestions}
+            >
+              <IoClose />
+            </button>
+          )}
           {isFetchingSuggestions && <Loader size={22} className="pr-3" />}
         </Autocomplete>
       </div>

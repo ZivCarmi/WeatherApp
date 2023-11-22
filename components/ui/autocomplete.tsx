@@ -23,7 +23,7 @@ const Autocomplete: React.FC<AutocomplateProps> = ({ options, children }) => {
     <div className="relative w-full sm:w-96 flex items-center border rounded">
       {children}
       {showDropdown && (
-        <ul className="absolute top-full w-full h-[250px] overflow-y-auto bg-card shadow-md">
+        <ul className="absolute top-full w-full h-[250px] overflow-y-auto bg-card shadow-md z-10">
           {options.map((opt) => (
             <li key={opt.key} className="group">
               <button
