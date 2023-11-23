@@ -27,7 +27,7 @@ const LocationItem = () => {
 
   return (
     <div className="rounded flex gap-8 flex-col lg:flex lg:flex-row">
-      <div className="text-3xl flex-1 flex flex-col relative lg:justify-between px-4">
+      <div className="text-3xl flex-1 flex flex-col relative lg:justify-between px-4 gap-4">
         <div className="flex justify-between">
           {conditionsSuccess && (
             <motion.div
